@@ -461,22 +461,16 @@ class vector {
 
 // Non-member function overloads
 	
-	template <class T, class Alloc>
-		bool operator== (const ft::vector<T, Alloc>& lhs, const ft::vector<T, Alloc>& rhs)
-		{
-			if (lhs.size() != rhs.size())
-				return (false);
-			typename ft::vector<T>::const_iterator first1 = lhs.begin();
-			typename ft::vector<T>::const_iterator first2 = rhs.begin();
-			while (first1 != lhs.end())
-			{
-				if (first2 == rhs.end() || *first1 != *first2)
-					return (false);
-				++first1;
-				++first2;
-			}
-			return (true);
-		}
+template <class T, class Alloc>
+bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+{
+	if (lhs.size() != rhs.size())
+		return false;
+	for (size_t i = 0; i < lhs.size(); i++)
+		if (lhs[i] != rhs[i])
+			return false;
+	return true;
+}
 
 	template <class T, class Alloc>
 		bool operator!= (const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs)
@@ -484,56 +478,24 @@ class vector {
 			return (!(lhs == rhs));
 		}
 	
-	/*
-	** @brief Compare vector container to know
-	** if "lhs" elements are lexicographicalement less than "rhs".
-	**
-	** @param lhs vector to compare with "rhs".
-	** @param rhs vector for comparison of "lhs".
-	** @return true if "lhs" is lexicographicalement less, false otherwise.
-	*/
 	template <class T, class Alloc>
 		bool operator<  (const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs)
 		{
 			return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 		}
 
-	/*
-	** @brief Compare vector container to know
-	** if "lhs" elements are lexicographicalement less or equal than "rhs".
-	**
-	** @param lhs vector to compare with "rhs".
-	** @param rhs vector for comparison of "lhs".
-	** @return true if "lhs" is lexicographicalement less or equal, false otherwise.
-	*/
 	template <class T, class Alloc>
 		bool operator<= (const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs)
 		{
 			return (!(rhs < lhs));
 		}
 
-	/*
-	** @brief Compare vector container to know
-	** if "lhs" elements are lexicographicalement superior than "rhs".
-	**
-	** @param lhs vector to compare with "rhs".
-	** @param rhs vector for comparison of "lhs".
-	** @return true if "lhs" is lexicographicalement superior, false otherwise.
-	*/
 	template <class T, class Alloc>
 		bool operator>  (const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs)
 		{
 			return (rhs < lhs);
 		}
 
-	/*
-	** @brief Compare vector container to know
-	** if "lhs" elements are lexicographicalement superior or equal than "rhs".
-	**
-	** @param lhs vector to compare with "rhs".
-	** @param rhs vector for comparison of "lhs".
-	** @return true if "lhs" is lexicographicalement superior or equal, false otherwise.
-	*/
 	template <class T, class Alloc>
 		bool operator>= (const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs)
 		{
