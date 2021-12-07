@@ -3,7 +3,7 @@
 
 # include "utils.hpp"
 # include "iterator/avl_iterator.hpp"
-
+#include <iostream>
 namespace ft
 {
 
@@ -34,9 +34,29 @@ class AVL_tree
         _ghost->right = NULL;
         _ghost->left = NULL;
     }
+    AVL_tree&   operator=(const AVL_tree& x)
+    {
+        if (this != &x)
+        {
+            clear();
+            preOrderInsert(x._root, x._ghost);
+        }
+        return *this;
+    }
 
-    ~AVL_tree() { delete_nodes(_root);
-    _nodeAlloc.deallocate(_ghost, 1);
+    ~AVL_tree() 
+    { 
+        delete_nodes(_root);
+        _nodeAlloc.deallocate(_ghost, 1);
+    }
+
+    void    preOrderInsert(node *x, node *ghost)
+    {
+        if (!x || x == ghost)
+            return ;
+        insert(x->value);
+        preOrderInsert(x->left, ghost);
+        preOrderInsert(x->right, ghost);
     }
 
     void                clear()
@@ -47,22 +67,26 @@ class AVL_tree
         _size = 0;
     }
 
-    void       insert(value_type value)
+    pair<iterator, bool>       insert(value_type value)
     {
+        pair<iterator, bool>ret;
+        _isInsert = true;
         _root = _insert(_root, NULL, value);
-        if (!_size)
+        if (_size == 1)
         {
             _lastElem = _root;
             _lastElem->right = _ghost;
             _ghost->parent = _lastElem;
         }
-        else if (!key_comp()(value.first, _lastElem->value.first))
+        else if (key_comp()(_lastElem->value.first, value.first))
         {
-            _lastElem = _getLastElem(_root);
+            _lastElem = _lastElem->right;
             _lastElem->right = _ghost;
             _ghost->parent = _lastElem;
         }
-        _size++;
+        ret.first = iterator(_foundNode);
+        ret.second = _isInsert;
+        return ret;
     }
 
     void        erase(const key_type& k)
@@ -113,12 +137,7 @@ class AVL_tree
             x._size = tmpSize;
         }
     }
-
-    void        deleteNode(Key key)
-    {
-        _root = _deleteNode(_root, key);
-    }
-
+    
     node*   getRoot() { return _root; }
 
     node*   begin() const { return minValueNode(_root);}
@@ -164,6 +183,8 @@ class AVL_tree
         tmp->right = NULL;
         tmp->height = 1;
         tmp->parent = parent;
+        _size++;
+       _foundNode = tmp;
         return tmp;
     }
 
@@ -171,12 +192,18 @@ class AVL_tree
     {
         if (!x || x == _ghost)
             return createNode(parent, value);
+        if (!key_comp()(value.first, x->value.first) && !key_comp()(x->value.first, value.first))
+        {
+            _isInsert = false;
+           _foundNode = x;
+            return x;
+        }
         if (key_comp()(value.first, x->value.first))
             x->left = _insert(x->left, x, value);
         else if (!key_comp()(value.first, x->value.first))
             x->right = _insert(x->right, x, value);
         else
-            return x;    
+            return x;
         return x;
     }
 
@@ -260,18 +287,9 @@ class AVL_tree
         return y;
     }
 
-    void       preOrder_rec(node *x)
-    {
-        if (x == NULL)
-            return ;
-        preOrder_rec(x->left);
-        std::cout << x->value.first << " ";
-        preOrder_rec(x->right);
-    }
-
     void        delete_nodes(node *x)
     {
-        if (x == NULL)
+        if (x == NULL || x == _ghost)
             return ;
         delete_nodes(x->left);
         if (x->right != _ghost)
@@ -293,6 +311,8 @@ class AVL_tree
     node*                   _lastElem;
     node*                   _ghost;
     size_t                  _size;
+    node*                   _foundNode;
+    bool                    _isInsert;
 
 };
 

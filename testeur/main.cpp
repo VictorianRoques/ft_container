@@ -1,10 +1,13 @@
-#include "../container/vector.hpp"
+# include "../container/vector.hpp"
 # include "../container/stack.hpp"
+# include "../container/map.hpp"
+
+#ifndef TESTED_NAMESPACE
 # define TESTED_NAMESPACE ft
-# include "../container/iterator/bidirectional_iterator.hpp"
+#endif
 
 
 int		main(void)
 {
-	ft::bidirectional_iterator<int> toto;
+	int toto;
 }

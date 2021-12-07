@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
-cd ..  && make re
-./ft_container > ft
-./std_container > std
+make re
+mkdir logs
+./ft_container > logs/ft
+./std_container > logs/std
 
+cd logs
 printf "\nCheck diff between ft & std\n";
 printf "****************************\n\n";
 if diff ft std > /dev/null;then
@@ -11,4 +13,5 @@ if diff ft std > /dev/null;then
 else
     printf diff ft std;
 fi
+cd ..
 make fclean

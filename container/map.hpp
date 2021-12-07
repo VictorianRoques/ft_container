@@ -66,7 +66,7 @@ class map
 
     map(const map &x): _comp(x._comp)
     {
-        insert(x.begin(), x.end());
+        _tree = x._tree;
     }
 
     ~map() {}
@@ -75,8 +75,7 @@ class map
     {
         if (this != &x)
         {
-            _tree.clear();
-            insert(x.begin(), x.end());            
+            _tree = x._tree;          
         }
         return *this;
     }
@@ -109,8 +108,7 @@ class map
 
     mapped_type& operator[] (const key_type& k)
     {
-        pair<iterator, bool> ret = insert(value_type(k, mapped_type()));
-        return ret.first->second;
+        return insert(value_type(k, mapped_type())).first->second;
     }
 
     /*
@@ -119,16 +117,8 @@ class map
 
     pair<iterator, bool> insert(const value_type &val)
     {
-        pair<iterator, bool> ret;
-        if (count(val.first))
-            ret.second = false;
-        else
-        {
-            _tree.insert(val);
-            ret.second = true;
-        }
-        ret.first = find(val.first);
-        return ret;
+        return _tree.insert(val);
+        
     }
 
     iterator insert (iterator position, const value_type& val)
