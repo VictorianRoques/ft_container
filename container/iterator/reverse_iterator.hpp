@@ -9,7 +9,6 @@
 ** of a given iterator wich must be at least a biredirecional iterator
 ** From : https://en.cppreference.com/w/cpp/iterator/reverse_iterator
 */
-
 namespace ft {
 
 template< class Iter>
@@ -40,16 +39,19 @@ class reverse_iterator {
 
 	iterator_type		base() const { return _base; }
 
-	reference			operator*() const { return *(_base - 1); }
-	pointer				operator->() { return &operator*(); }
+	reference			operator*() const { 
+		Iter tmp(_base);
+		return *--tmp;
+	}
+	pointer				operator->() const { return &operator*(); }
 
-	reverse_iterator	&operator++() { --_base; return *this; }
+	reverse_iterator	&operator++() {--_base; return *this; }
 	reverse_iterator	&operator--() {++_base; return *this; }
 	reverse_iterator	operator++(int) { return reverse_iterator(_base--); }
 	reverse_iterator	operator--(int) { return reverse_iterator(_base++); }
 
 	reverse_iterator 	operator+( difference_type n ) const { return reverse_iterator(_base - n); }
-	reverse_iterator 	operator-( difference_type n ) const { return reverse_iterator(_base + n); }
+	reverse_iterator 	operator-( difference_type n ) const { return reverse_iterator(_base + n);}
 	reverse_iterator& 	operator+=( difference_type n ) { _base -= n; return *this; }
 	reverse_iterator& 	operator-=( difference_type n ) { _base += n; return *this; }
 	
@@ -111,7 +113,7 @@ reverse_iterator<Iter>
     operator+( typename reverse_iterator<Iter>::difference_type n,
                const reverse_iterator<Iter>& it )
 {
-	return reverse_iterator<Iter>(it.base() - n);
+	return (it + n);
 }
 
 template< class Iterator >

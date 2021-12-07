@@ -31,8 +31,8 @@ class vector {
 	typedef 			ft::random_access_iterator<const value_type>    const_iterator;
 	typedef				ft::reverse_iterator<iterator>					reverse_iterator;
 	typedef				ft::reverse_iterator<const_iterator>			const_reverse_iterator;
-    typedef ptrdiff_t													difference_type;
-    typedef size_t														size_type;
+    typedef 			ptrdiff_t										difference_type;
+    typedef 			size_t											size_type;
 	
 	/**************/
 	/** ITERATOR **/
@@ -42,10 +42,10 @@ class vector {
 	const_iterator			begin() const { return const_iterator(_tab); };
 	iterator				end() { return iterator(_tab + _size); };
 	const_iterator			end() const { return const_iterator(_tab + _size); };
-	reverse_iterator		rbegin() { return  reverse_iterator(_tab + _size); };
-	const_reverse_iterator	rbegin() const { return const_reverse_iterator(_tab + _size); }
-	reverse_iterator		rend() { return reverse_iterator (_tab); };
-	const_reverse_iterator	rend() const { return const_reverse_iterator (_tab); };
+	reverse_iterator		rbegin() { return  reverse_iterator(end()); }
+	const_reverse_iterator	rbegin() const { return const_reverse_iterator(end());}
+	reverse_iterator		rend() { return reverse_iterator (begin()); };
+	const_reverse_iterator	rend() const { return const_reverse_iterator (begin()); };
 
 	/**********************/
 	/**	MEMBER FUNCTIONS **/
