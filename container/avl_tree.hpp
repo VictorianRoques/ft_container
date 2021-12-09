@@ -34,6 +34,7 @@ class AVL_tree
         _ghost->right = NULL;
         _ghost->left = NULL;
     }
+
     AVL_tree&   operator=(const AVL_tree& x)
     {
         if (this != &x)
@@ -58,6 +59,8 @@ class AVL_tree
         preOrderInsert(x->left, ghost);
         preOrderInsert(x->right, ghost);
     }
+
+    node*               getGhost() const { return _ghost; }
 
     void                clear()
     {
@@ -84,7 +87,7 @@ class AVL_tree
             _lastElem->right = _ghost;
             _ghost->parent = _lastElem;
         }
-        ret.first = iterator(_foundNode);
+        ret.first = iterator(_foundNode, _ghost);
         ret.second = _isInsert;
         return ret;
     }
@@ -220,6 +223,8 @@ class AVL_tree
             if (!x->left && !x->right)
 		    {
 		    	_pairAlloc.destroy(&x->value);
+                _nodeAlloc.deallocate(x, 1);
+                x = NULL;
                 _size--;
 		    	return NULL;
 		    }
@@ -228,6 +233,8 @@ class AVL_tree
 		    	node* tmp = x->right;
 		    	tmp->parent = x->parent;
 		    	_pairAlloc.destroy(&x->value);
+                _nodeAlloc.deallocate(x, 1);
+                x = NULL;
                 _size--;
 		    	return tmp;
 		    }
@@ -236,6 +243,8 @@ class AVL_tree
 		    	node* tmp = x->left;
 		    	tmp->parent = x->parent;
 		    	_pairAlloc.destroy(&x->value);
+                _nodeAlloc.deallocate(x, 1);
+                x = NULL;
                 _size--;
 		    	return tmp;
 		    }
@@ -292,8 +301,7 @@ class AVL_tree
         if (x == NULL || x == _ghost)
             return ;
         delete_nodes(x->left);
-        if (x->right != _ghost)
-            delete_nodes(x->right);
+        delete_nodes(x->right);
         _pairAlloc.destroy(&x->value);
         _nodeAlloc.deallocate(x, 1);
     }

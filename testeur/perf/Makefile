@@ -1,13 +1,9 @@
 NAME 		=	ft_container
 STD_NAME	=	std_container
 CC			=	clang++
-CFLAGS		=	-Wall -Werror -Wextra -std=c++98 -g3
+CFLAGS		=	-Wall -Werror -Wextra -std=c++98
 OBJ 		=	$(SRC:.cpp=.o)
-SRC 		=	unit-test/main.cpp \
-				unit-test/vector.cpp \
-				unit-test/map.cpp \
-				unit-test/stack.cpp
-		
+SRC 		=	main_time.cpp
 RED			=	\033[0;31m
 GREEN		=	\033[0;32m
 WHITE		=	\033[0m

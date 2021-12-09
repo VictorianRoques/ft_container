@@ -2,15 +2,19 @@
 #include <string>
 #include <deque>
 
-#if 1 //CREATE A REAL STL EXAMPLE
+#ifndef TESTED_NAMESPACE
+# define TESTED_NAMESPACE ft
+#endif
+
+#if TESTED_NAMESPACE == std 
 	#include <map>
 	#include <stack>
 	#include <vector>
 	namespace ft = std;
 #else
-	#include "map.hpp"
-	#include "stack.hpp"
-	#include "vector.hpp"
+	#include "../../container/map.hpp"
+	#include "../../container/stack.hpp"
+	#include "../../container/vector.hpp"
 #endif
 
 #include <stdlib.h>

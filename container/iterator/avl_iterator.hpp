@@ -20,17 +20,18 @@ namespace ft
         typedef typename            iterator<bidirectional_iterator_tag, T>::iterator_category iterator_category;
 
         avl_iterator() : _current(NULL) {}
-        avl_iterator(node *x) : _current(x) {}
-        avl_iterator(const avl_iterator &src) : _current(src._current) {}
+        avl_iterator(node *x, node *ghost) : _current(x), _ghost(ghost) {}
+        avl_iterator(const avl_iterator &src) : _current(src._current), _ghost(src._ghost) {}
         avl_iterator &operator=(const avl_iterator &src)
         {
             if (this == &src)
                 return *this;
             _current = src._current;
+            _ghost = src._ghost;
             return *this;
         }
 
-        operator avl_iterator<const T, node>() const { return (avl_iterator<const T, node>(_current)); };
+        operator avl_iterator<const T, node>() const { return (avl_iterator<const T, node>(_current, _ghost)); };
         ~avl_iterator() {}
 
         bool operator==(const avl_iterator &x) const { return _current == x._current; }
@@ -40,10 +41,12 @@ namespace ft
         pointer     operator->() const { return &_current->value; }
 
         avl_iterator &operator++()
-        {     
-            if (_current->right)
+        {
+            if (_current->right != NULL)
+            {
                 _current = minValueNode(_current->right);
-            else if (_current->parent)
+            }
+            else if (_current->parent != NULL)
             {
                 node *tmp = _current;
                 _current = _current->parent;
@@ -65,8 +68,10 @@ namespace ft
 
         avl_iterator &operator--()
         {
-            if (_current->left)
+            if (_current->left != NULL)
+            {
                 _current = maxValueNode(_current->left);
+            }
             else if (_current->parent)
             {
                 node *tmp = _current;
@@ -90,6 +95,7 @@ namespace ft
     protected:
     
     node *_current;
+    node *_ghost;
 
     };
 }

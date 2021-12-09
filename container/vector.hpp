@@ -34,19 +34,6 @@ class vector {
     typedef 			ptrdiff_t										difference_type;
     typedef 			size_t											size_type;
 	
-	/**************/
-	/** ITERATOR **/
-	/**************/
-	
-	iterator				begin() { return iterator(_tab); };
-	const_iterator			begin() const { return const_iterator(_tab); };
-	iterator				end() { return iterator(_tab + _size); };
-	const_iterator			end() const { return const_iterator(_tab + _size); };
-	reverse_iterator		rbegin() { return  reverse_iterator(end()); }
-	const_reverse_iterator	rbegin() const { return const_reverse_iterator(end());}
-	reverse_iterator		rend() { return reverse_iterator (begin()); };
-	const_reverse_iterator	rend() const { return const_reverse_iterator (begin()); };
-
 	/**********************/
 	/**	MEMBER FUNCTIONS **/
 	/**********************/
@@ -105,12 +92,26 @@ class vector {
 		return *this;
 	}
 
+	/**************/
+	/** ITERATOR **/
+	/**************/
+	
+	iterator				begin() { return iterator(_tab); };
+	const_iterator			begin() const { return const_iterator(_tab); };
+	iterator				end() { return iterator(_tab + _size); };
+	const_iterator			end() const { return const_iterator(_tab + _size); };
+	reverse_iterator		rbegin() { return  reverse_iterator(end()); }
+	const_reverse_iterator	rbegin() const { return const_reverse_iterator(end());}
+	reverse_iterator		rend() { return reverse_iterator (begin()); };
+	const_reverse_iterator	rend() const { return const_reverse_iterator (begin()); };
+
 	/************************/
 	/**** CAPACITY FUNCTION**/
 	/************************/
 
 	size_type		size() const { return _size ;};
 	size_type 		max_size() const { return _max_size; };
+
 	void resize 	(size_type n, value_type val = value_type())
 	{
 		if (n < _size)

@@ -2,6 +2,7 @@
 # define MAP_H
 
 # include <memory>
+# include <unistd.h>
 # include "avl_tree.hpp"
 # include "iterator/avl_iterator.hpp"
 # include "iterator/reverse_iterator.hpp"
@@ -84,15 +85,15 @@ class map
     ** ITERATOR ** 
     */
 
-    iterator                begin()         { return iterator(_tree.begin()); }
-    const_iterator          begin() const   { return const_iterator(_tree.begin()); }
-    iterator                end()           { return iterator (_tree.end()); }
-    const_iterator          end() const     { return const_iterator(_tree.end()); }
+    iterator                begin()         { return iterator(_tree.begin(), _tree.getGhost()); }
+    const_iterator          begin() const   { return const_iterator(_tree.begin(), _tree.getGhost()); }
+    iterator                end()           { return iterator (_tree.end(), _tree.getGhost()); }
+    const_iterator          end() const     { return const_iterator(_tree.end(), _tree.getGhost()); }
 
-    reverse_iterator        rbegin()        { return reverse_iterator(_tree.end()); }
-    const_reverse_iterator  rbegin() const  { return const_reverse_iterator(_tree.end()); }
-    reverse_iterator        rend()          { return reverse_iterator(_tree.begin()); }
-    const_reverse_iterator  rend() const    { return const_reverse_iterator(_tree.begin()); }
+    reverse_iterator        rbegin()        { return reverse_iterator(end()); }
+    const_reverse_iterator  rbegin() const  { return const_reverse_iterator(end()); }
+    reverse_iterator        rend()          { return reverse_iterator(begin()); }
+    const_reverse_iterator  rend() const    { return const_reverse_iterator(begin()); }
     
     /*
     ** Capacity
@@ -147,8 +148,7 @@ class map
 
     void    erase(iterator position)
     {
-        if (count(position->first))
-            _tree.erase(position->first);
+        _tree.erase(position->first);
     }
 
     size_type erase (const key_type& k)
@@ -163,10 +163,14 @@ class map
 
     void    erase(iterator first, iterator last)
     {
+        iterator tmp(first);
         while (first != last)
         {
-            erase(first);
-            first++;
+            tmp++;
+            _tree.erase(first->first);
+            if (tmp == last)
+                return ;
+            first = tmp;
         }
     }
 
@@ -297,7 +301,7 @@ class map
 
     key_compare                             _comp;
     allocator_type                          _alloc;
-    AVL_tree<Key, T, Compare, Alloc>                        _tree;
+    AVL_tree<Key, T, Compare, Alloc>        _tree;
 };
 
 template<class Key, class T, class Compare, class Alloc>
