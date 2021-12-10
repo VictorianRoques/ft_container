@@ -2,6 +2,7 @@
 
 void        stack(std::string unit_test)
 {
+	(void)unit_test;
     std::cout << "\n\nSTACK\n\n";
 	std::cout << "********************\n\n";
 

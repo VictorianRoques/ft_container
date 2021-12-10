@@ -4,8 +4,8 @@ CC			=	clang++
 CFLAGS		=	-Wall -Werror -Wextra -std=c++98
 OBJ 		=	$(SRC:.cpp=.o)
 OBJ_STD		= 	$(SRC_STD:.cpp=.o)
-SRC 		=	main_time.cpp
-SRC_STD		=	main_time_std.cpp
+SRC 		=	main.cpp
+SRC_STD		=	main_std.cpp
 RED			=	\033[0;31m
 GREEN		=	\033[0;32m
 WHITE		=	\033[0m

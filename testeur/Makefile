@@ -1,7 +1,7 @@
 NAME 		=	ft_container
 STD_NAME	=	std_container
 CC			=	clang++
-CFLAGS		=	-Wall -Werror -Wextra -std=c++98 -g3
+CFLAGS		=	-Wall -Werror -Wextra -std=c++98
 OBJ 		=	$(SRC:.cpp=.o)
 SRC 		=	unit-test/main.cpp \
 				unit-test/vector.cpp \
@@ -15,7 +15,7 @@ WHITE		=	\033[0m
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	@($(CC) $(CFLAGS) -o $(NAME) -DTESTED_NAMESPACE=ft $(OBJ))
+	@($(CC) $(CFLAGS) -o $(NAME) -DTESTED_NAMESPACE=std $(OBJ))
 	@($(CC) $(CFLAGS) -o $(STD_NAME) -DTESTED_NAMESPACE=std $(OBJ))
 
 clean:

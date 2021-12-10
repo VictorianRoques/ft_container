@@ -450,6 +450,8 @@ class vector {
 		_tab = NULL; _size = 0; _capacity = 0;
 	};
 
+	allocator_type		get_allocator() const { return _alloc; }
+
 	private:
 
 	value_type													*_tab;

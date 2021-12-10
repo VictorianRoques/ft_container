@@ -28,6 +28,7 @@ void	print_size(TESTED_NAMESPACE::map<int, int> &v)
 
 void    map(std::string unit_test)
 {
+	(void)unit_test;
     std::cout << "\n\nMAP\n\n";
 	std::cout << "********************\n\n";
 

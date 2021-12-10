@@ -3,9 +3,7 @@
 #include <iostream>
 #include <string>
 
-#ifndef TESTED_NAMESPACE
-# define TESTED_NAMESPACE ft
-#endif
+#include "ft_std.hpp"
 
 #define TESTED_TYPE int
 

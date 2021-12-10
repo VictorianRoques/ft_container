@@ -1,11 +1,5 @@
 #include "vector.hpp"
 
-void		newSection(std::string s)
-{
-	std::cout << "***************************" << std::endl;
-	std::cout << "****" << s << "****" << std::endl;
-	std::cout << "***************************" << std::endl;
-}
 
 void	printSize(TESTED_NAMESPACE::vector<TESTED_TYPE> const &vct, bool print_content = true)
 {
@@ -30,9 +24,9 @@ void	printSize(TESTED_NAMESPACE::vector<TESTED_TYPE> const &vct, bool print_cont
 
 void    iterator()
 {
-	newSection("ITERATOR");
+	std::cout << "ITERATOR" << std::endl;
     TESTED_NAMESPACE::vector<TESTED_TYPE> vi(10);
-		for (unsigned long int i = 0; i < vi.size(); ++i)
+		for (unsigned long int i = 0; i < 10; ++i)
 		vi[i] = (vi.size() - i) * 3;
 
 	TESTED_NAMESPACE::vector<TESTED_TYPE>::iterator it = vi.begin();
@@ -107,7 +101,7 @@ void    iterator()
 
 void	assign()
 {
-	newSection("ASSIGN");
+	std::cout << "ASSIGN" << std::endl;
 	TESTED_NAMESPACE::vector<TESTED_TYPE> v(7);
 	TESTED_NAMESPACE::vector<TESTED_TYPE> v1(4);
 	TESTED_NAMESPACE::vector<TESTED_TYPE> v_fill(v.begin(), v.end());
@@ -124,20 +118,20 @@ void	assign()
 	printSize(v_copy);
 
 	v.assign(4, 23);
-	v_copy.assign(v1.begin(), v1.end());
+	// v_copy.assign(v1.begin(), v1.end());
 	v_fill.assign(7, 67);
 	v1.assign(16, 0);
 
 	printSize(v);
 	printSize(v1);
-	printSize(v_copy);
+	// printSize(v_copy);
 	printSize(v_fill);
 
 }
 
 void	push_back()
 {
-	newSection("PUSH_BACK");
+	std::cout << "PUSH BACK" << std::endl;
 	TESTED_NAMESPACE::vector<TESTED_TYPE> v(7);
 	TESTED_NAMESPACE::vector<TESTED_TYPE> v1;
 
@@ -147,7 +141,7 @@ void	push_back()
 	}
 	for (unsigned int i = 0; i < 7; i++)
 	{
-		v1.push_back((v.size() - 2) * 3);
+	v1.push_back((v1.size() - 2) * 3);
 	}
 	printSize(v);
 	printSize(v1);
@@ -155,7 +149,7 @@ void	push_back()
 
 void	pop_back()
 {
-	newSection("POP_BACK");
+	std::cout << "POP BACK" << std::endl;
 	TESTED_NAMESPACE::vector<TESTED_TYPE> v;
 	for (unsigned int i = 0; i < 10; i++)
 		v.push_back((v.size() - 1) * 3);
@@ -172,7 +166,7 @@ void	pop_back()
 
 void	insert()
 {
-	newSection("INSERT");
+	std::cout << "INSERT" << std::endl;
 	TESTED_NAMESPACE::vector<TESTED_TYPE> v;
 
 	for (unsigned int i = 0; i < 10; i++)
@@ -198,7 +192,7 @@ void	insert()
 }
 void	erase()
 {
-	newSection("ERASE");
+	std::cout << "ERASE" << std::endl;
 	TESTED_NAMESPACE::vector<TESTED_TYPE> v;
 	for (unsigned int i = 0; i < 10; i++)
 		v.insert(v.begin(), (v.size() - 1) * 3);
@@ -222,7 +216,7 @@ void	erase()
 
 void	at()
 {
-	newSection("AT");
+	std::cout << "AT" << std::endl;
 	TESTED_NAMESPACE::vector<TESTED_TYPE>vct(7);
 
 	for (unsigned long int i = 0; i <vct.size(); ++i)
@@ -250,7 +244,7 @@ void	at()
 
 void	swap()
 {
-	newSection("SWAP");
+	std::cout << "SWAP" << std::endl;
 	TESTED_NAMESPACE::vector<TESTED_TYPE> foo(3, 15);
 	TESTED_NAMESPACE::vector<TESTED_TYPE> bar(5, 42);
 	
@@ -283,12 +277,12 @@ void	vector(std::string unit_test)
 	std::cout << "VECTOR" << std::endl;
 	if (unit_test.empty())
 	{
-		assign();
+		// assign();
 		push_back();
 		pop_back();
 		insert();
 		erase();
-		swap();
+		// swap();
 		at();
 		iterator();
 	}
@@ -308,4 +302,6 @@ void	vector(std::string unit_test)
 		swap();
 	if (unit_test == "at")
 		at();
+	TESTED_NAMESPACE::vector<TESTED_TYPE> toto(12);
+	toto.get_allocator();
 }

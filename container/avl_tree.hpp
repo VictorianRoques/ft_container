@@ -17,14 +17,15 @@ class AVL_tree
 {
     public:
 
-    typedef Key                                 key_type;
-    typedef T                                   mapped_type;
-    typedef ft::pair<const Key, T>              value_type;
-    typedef Compare                             key_compare;
-    typedef Node<value_type>                    node;
-    typedef Alloc                               allocator_type;
-    typedef ft::avl_iterator<value_type, node>  iterator;
-    typedef size_t                              size_type;
+    typedef Key                                             key_type;
+    typedef T                                               mapped_type;
+    typedef ft::pair<const Key, T>                          value_type;
+    typedef Compare                                         key_compare;
+    typedef Node<value_type>                                node;
+    typedef Alloc                                           allocator_type;
+    typedef ft::avl_iterator<value_type, node>              iterator;
+    typedef size_t                                          size_type;
+    typedef typename Alloc::template rebind<node>::other    nodeAlloc;
 
     AVL_tree(const allocator_type& alloc = allocator_type())
     : _pairAlloc(alloc), _root(NULL), _lastElem(NULL), _size(0)
@@ -262,7 +263,6 @@ class AVL_tree
         node *T3 = y->right;
 
         y->right = z;
-
         y->parent = z->parent;
 
         z->parent = y;
@@ -314,16 +314,14 @@ class AVL_tree
     }
 
     allocator_type          _pairAlloc;
-    std::allocator<node>    _nodeAlloc;
+    nodeAlloc               _nodeAlloc;
     node*                   _root;
     node*                   _lastElem;
     node*                   _ghost;
     size_t                  _size;
     node*                   _foundNode;
     bool                    _isInsert;
-
 };
-
 }
 
 #endif

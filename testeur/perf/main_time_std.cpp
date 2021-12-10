@@ -2,10 +2,10 @@
 #include <string>
 #include <deque>
 
-
-#include "../../container/map.hpp"s
-#include "../../container/stack.hpp"
-#include "../../container/vector.hpp"
+#include <map>
+#include <stack>
+#include <vector>
+namespace ft = std;
 
 #include <stdlib.h>
 
