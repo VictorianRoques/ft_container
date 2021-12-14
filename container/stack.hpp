@@ -15,7 +15,6 @@ public:
 	typedef	size_t					size_type;
 
 	explicit stack(const container_type& ctnr = container_type()): c(ctnr) {}
-	virtual	~stack() {}
 	bool empty()						const { return c.empty(); }
 	size_type							size() const { return c.size(); }
 	value_type&							top() { return c.back(); }

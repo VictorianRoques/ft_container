@@ -20,20 +20,19 @@ namespace ft
         typedef typename            iterator<bidirectional_iterator_tag, T>::iterator_category iterator_category;
 
         avl_iterator() : _current(NULL) {}
-        avl_iterator(node *x, node *ghost) : _current(x), _ghost(ghost) {}
-        avl_iterator(const avl_iterator &src) : _current(src._current), _ghost(src._ghost) {}
+        avl_iterator(node *x) : _current(x) {}
+        avl_iterator(const avl_iterator &src) : _current(src._current) {}
         avl_iterator &operator=(const avl_iterator &src)
         {
             if (this == &src)
                 return *this;
             _current = src._current;
-            _ghost = src._ghost;
             return *this;
         }
 
-        operator avl_iterator<const T, node>() const { return (avl_iterator<const T, node>(_current, _ghost)); };
+        operator avl_iterator<const T, node>() const { return (avl_iterator<const T, node>(_current)); };
         ~avl_iterator() {}
-
+        
         bool operator==(const avl_iterator &x) const { return _current == x._current; }
         bool operator!=(const avl_iterator &x) const { return !(_current == x._current); }
 
@@ -95,7 +94,6 @@ namespace ft
     protected:
     
     node *_current;
-    node *_ghost;
 
     };
 }

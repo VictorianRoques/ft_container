@@ -64,7 +64,6 @@ class vector {
 			i++;
 		}
 	}
-
 	vector(const vector & src): _size(src._size), _max_size(src._max_size), _capacity(src._capacity)
 	{
 		_tab = _alloc.allocate(_capacity);
@@ -111,8 +110,7 @@ class vector {
 
 	size_type		size() const { return _size ;};
 	size_type 		max_size() const { return _max_size; };
-
-	void resize 	(size_type n, value_type val = value_type())
+	void 			resize 	(size_type n, value_type val = value_type())
 	{
 		if (n < _size)
 		{
@@ -156,6 +154,7 @@ class vector {
 
 	reference		operator[](size_type n) { return _tab[n]; };
 	const_reference operator[](size_type n) const { return _tab[n]; };
+
 	reference		at(size_type n) {
 		if (n >= _size)
 			throw std::out_of_range("vector");

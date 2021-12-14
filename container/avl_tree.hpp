@@ -49,7 +49,7 @@ class AVL_tree
     ~AVL_tree() 
     { 
         delete_nodes(_root);
-        _nodeAlloc.deallocate(_ghost, 1);
+        _pairAlloc.destroy(&_ghost->value);
     }
 
     void    preOrderInsert(node *x, node *ghost)
@@ -60,8 +60,6 @@ class AVL_tree
         preOrderInsert(x->left, ghost);
         preOrderInsert(x->right, ghost);
     }
-
-    node*               getGhost() const { return _ghost; }
 
     void                clear()
     {
@@ -76,42 +74,20 @@ class AVL_tree
         pair<iterator, bool>ret;
         _isInsert = true;
         _root = _insert(_root, NULL, value);
-        if (_size == 1)
-        {
-            _lastElem = _root;
-            _lastElem->right = _ghost;
-            _ghost->parent = _lastElem;
-        }
-        else if (key_comp()(_lastElem->value.first, value.first))
-        {
-            _lastElem = _lastElem->right;
-            _lastElem->right = _ghost;
-            _ghost->parent = _lastElem;
-        }
-        ret.first = iterator(_foundNode, _ghost);
+        ret.first = iterator(_foundNode);
         ret.second = _isInsert;
         return ret;
     }
 
-    void        erase(const key_type& k)
+   void        erase(const key_type& k)
     {
-        bool updateLastElem = false;
         if (!_root || !_lastElem)
             return ;
-        if (!key_comp()(k, _lastElem->value.first) && !key_comp()(_lastElem->value.first, k))
-            updateLastElem = true;
         _root = _deleteNode(_root, k);
         if (!_size)
         {
             _root = NULL;
             _lastElem = NULL;
-            return ;
-        }
-        if (updateLastElem)
-        {
-            _lastElem = _getLastElem(_root);
-            _lastElem->right = _ghost;
-            _ghost->parent = _lastElem;
         }
     }
 
@@ -189,6 +165,18 @@ class AVL_tree
         tmp->parent = parent;
         _size++;
        _foundNode = tmp;
+       if (!_lastElem || _size == 1)
+       {
+           _lastElem = tmp;
+           _lastElem->right = _ghost;
+           _ghost->parent = _lastElem;
+       }
+       else if (key_comp()(_lastElem->value.first, value.first))
+       {
+           _lastElem = tmp;
+           _lastElem->right = _ghost;
+           _ghost->parent = _lastElem;
+       }
         return tmp;
     }
 
@@ -208,56 +196,117 @@ class AVL_tree
             x->right = _insert(x->right, x, value);
         else
             return x;
-        return x;
+        return _balanceTree(x);
     }
 
     node*         _deleteNode(node *x, const key_type& key)
     {
         if (!x || x == _ghost)
             return x;
-          if (key_comp()(key, x->value.first))
+        if (key_comp()(key, x->value.first))
             x->left = _deleteNode(x->left, key);
         else if (key_comp()(x->value.first, key))
             x->right = _deleteNode(x->right, key);
         else
         {
-            if (!x->left && !x->right)
-		    {
-		    	_pairAlloc.destroy(&x->value);
+            if (x->left == NULL && x->right == NULL)
+            {
+                _pairAlloc.destroy(&x->value);
                 _nodeAlloc.deallocate(x, 1);
                 x = NULL;
                 _size--;
-		    	return NULL;
-		    }
-		    else if (!x->left)
-		    {
-		    	node* tmp = x->right;
-		    	tmp->parent = x->parent;
-		    	_pairAlloc.destroy(&x->value);
+                return NULL;
+            }
+            if (x->left == NULL)
+            {
+                if (x->right == _ghost)
+                {
+                    _lastElem = x->parent;
+                    _ghost->parent = _lastElem;
+                    _pairAlloc.destroy(&x->value);
+                    _nodeAlloc.deallocate(x, 1);
+                    x = NULL;
+                    _size--;
+                    return _ghost;
+                }
+                node *tmp = x->right;
+                tmp->parent = x->parent;
+                _pairAlloc.destroy(&x->value);
                 _nodeAlloc.deallocate(x, 1);
                 x = NULL;
                 _size--;
-		    	return tmp;
-		    }
-		    else if (!x->right)
-		    {
-		    	node* tmp = x->left;
-		    	tmp->parent = x->parent;
-		    	_pairAlloc.destroy(&x->value);
-                _nodeAlloc.deallocate(x, 1);
-                x = NULL;
-                _size--;
-		    	return tmp;
-		    }
-		    node* tmp = minValueNode(x->right);
-		    _pairAlloc.destroy(&x->value);
-		    _pairAlloc.construct(&x->value, tmp->value);
-		    x->right = _deleteNode(x->right, tmp->value.first);
+                return tmp;
+            }
+            else if (x->right == NULL || x->right == _ghost)
+            {
+               node *tmp = x->left;
+               tmp->parent = x->parent;
+               // Update ghost place
+               if (x->right == _ghost)
+               {
+                   tmp->right = _ghost;
+                   _ghost->parent = tmp;
+                   _lastElem = tmp;
+               }
+               _pairAlloc.destroy(&x->value);
+               _nodeAlloc.deallocate(x, 1);
+               x = NULL;
+               _size--;
+               return tmp; 
+            }
+            else
+            {
+                node *tmp = minValueNode(x->right);
+                _pairAlloc.destroy(&x->value);
+                _pairAlloc.construct(&x->value, tmp->value);
+                x->right = _deleteNode(x->right, tmp->value.first);
+            }
+        }
+        return _balanceTree(x);
+    }
+
+    node*       _balanceTree(node* x)
+    {
+        if (!x || x == _ghost)
+            return x;
+        x->height = 1 + max(height(x->left), height(x->right));
+        int balance = getBalance(x);
+       if (balance > 1 && getBalance(x->left) >= 0)
+            return rightRotate(x);
+        if (balance > 1 && getBalance(x->left) < 0)
+        {
+            x->left = leftRotate(x->left);
+            return rightRotate(x);
+        }
+        if (balance < -1 && getBalance(x->right) <= 0)
+            return leftRotate(x);
+        if (balance < -1 && getBalance(x->right) > 0)
+        {
+            x->right = rightRotate(x->right);
+            return leftRotate(x);
         }
         return x;
     }
 
-    node*   rightRotate(node *z)
+    node*   leftRotate(node *z)
+    {
+        node *y = z->right;
+        node *T3 = y->left;
+
+        y->left = z;
+        y->parent = z->parent;
+        z->parent = y;
+
+        z->right = T3;
+        if (T3)
+            T3->parent = z;
+        y->height = 1 + max(height(y->left), height(y->right));
+        z->height = 1 + max(height(z->left), height(z->right));
+
+        return y;
+    }
+
+    node*       rightRotate(node *z)
     {
         node *y = z->left;
         node *T3 = y->right;
@@ -267,26 +316,6 @@ class AVL_tree
 
         z->parent = y;
         z->left = T3;
-
-        if (T3)
-            T3->parent = z;
-    
-        y->height = 1 + max(height(y->left), height(y->right));
-        z->height = 1 + max(height(z->left), height(z->right));
-
-        return y;
-    }
-
-    node*       leftRotate(node *z)
-    {
-        node *y = z->right;
-        node *T3 = y->left;
-
-        y->left = z;
-        y->parent = z->parent;
-        z->parent = y;
-        z->right = T3;
-
         if (T3)
             T3->parent = z;
 
@@ -304,13 +333,6 @@ class AVL_tree
         delete_nodes(x->right);
         _pairAlloc.destroy(&x->value);
         _nodeAlloc.deallocate(x, 1);
-    }
-
-    node*               _getLastElem(node* x)
-    {
-        while (x && x->right && x->right != _ghost)
-            x = x->right;
-        return x;
     }
 
     allocator_type          _pairAlloc;

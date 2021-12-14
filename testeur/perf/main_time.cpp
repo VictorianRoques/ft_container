@@ -3,7 +3,7 @@
 #include <deque>
 
 
-#include "../../container/map.hpp"s
+#include "../../container/map.hpp"
 #include "../../container/stack.hpp"
 #include "../../container/vector.hpp"
 
@@ -82,7 +82,6 @@ int main(int argc, char** argv) {
 	{
 		//NORMAL ! :P
 	}
-	
 	for (int i = 0; i < COUNT; ++i)
 	{
 		map_int.insert(ft::make_pair(rand(), rand()));
