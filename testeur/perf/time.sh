@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-make re
+make
 
 printf "\n**** FT ****\n"
 time ./ft_container 123
